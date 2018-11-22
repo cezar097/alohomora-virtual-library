@@ -27,6 +27,6 @@ const Books = sequelize.define('books',{
 })
 
 const Favorites = sequelize.define('favorites',{
-    username: Sequelize.STRING
+    username: Sequelize.STRING,
     ISBN: Sequelize.STRING
 })
