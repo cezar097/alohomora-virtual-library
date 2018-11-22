@@ -1,0 +1,24 @@
+{
+  "name": "alohomora-virtual-library",
+  "version": "1.0.0",
+  "description": "Virtual library",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cezar097/alohomora-virtual-library.git"
+  },
+  "author": "Cezar Barbu, Raluca Elena Mihalcea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cezar097/alohomora-virtual-library/issues"
+  },
+  "homepage": "https://github.com/cezar097/alohomora-virtual-library#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.41.2"
+  }
+}
