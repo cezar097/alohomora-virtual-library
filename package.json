@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/cezar097/alohomora-virtual-library#readme",
   "dependencies": {
+    "axios": "^0.18.0",
+    "circular-json": "^0.5.9",
     "express": "^4.16.4",
     "mysql2": "^1.6.4",
+    "nodeadmin": "^0.1.2",
     "sequelize": "^4.41.2"
   }
 }
