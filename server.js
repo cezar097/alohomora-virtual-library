@@ -129,6 +129,3 @@ app.get('/googleauthors/:author',function(request, response) {
         console.log(ex)
     })
 })
-
-
-

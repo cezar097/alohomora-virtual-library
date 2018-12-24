@@ -1,0 +1,12 @@
+.vcenter {
+   display: flex;
+   align-items: center;
+}
+
+.login-button {
+   margin: 1em;
+   background-color: white;
+   border: none;
+   width: 40%;
+   display: inline-block;
+}
