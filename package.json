@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "circular-json": "^0.5.9",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "mysql2": "^1.6.4",
     "nodeadmin": "^0.1.2",

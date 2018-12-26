@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Book.css';
-import $ from 'jquery'
 
 class Book extends Component {
   render() {

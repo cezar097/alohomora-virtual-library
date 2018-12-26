@@ -7,10 +7,13 @@ const APIKey = 'AIzaSyBbRCUtpZtIjANRL8ZZALBOmJ2_fbW7tLQ'
 var nodeadmin = require('nodeadmin')
 app.use('/nodeadmin',nodeadmin(app))
 
+var cors = require('cors');
+app.use(cors());
+
 app.use('/',express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded())
-app.listen(8080)
+app.listen(8081)
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('alohomora', 'root','',{
@@ -22,7 +25,8 @@ const sequelize = new Sequelize('alohomora', 'root','',{
 })
 
 const Users = sequelize.define('users',{
-    username: Sequelize.STRING
+    email: Sequelize.STRING,
+    pass: Sequelize.STRING,
 })
 
 const Books = sequelize.define('books',{
@@ -65,8 +69,8 @@ app.post('/users',(request,response)=>{
     })
 })
 
-app.get('/users/:username',(request,response)=>{
-   Users.findAll({include: [{model: Books}], where: {username: request.params.username}}).then((users)=>{
+app.get('/users/:email',(request,response)=>{
+   Users.findAll({include: [{model: Books}], where: {email: request.params.email}}).then((users)=>{
        response.status(200).json(users)
    }).catch((ex)=>{
         console.log(ex)

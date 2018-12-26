@@ -1,9 +1,83 @@
 import React, { Component } from 'react';
 import './App.css';
-import $ from 'jquery'
+import $ from 'jquery';
+import axios from 'axios';
 import BooksContainer from './BooksContainer';
 
+const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io:8081";
+
 class App extends Component {
+  constructor (props){
+    super(props);
+    this.state = {
+      user: null,
+    }
+    this.getUser = this.getUser.bind(this);
+  }
+  
+  postUser(e){
+    e.preventDefault();
+    let email = $("#email").val();
+    let pass = $("#pass").val();
+    axios.post(SERVER+'/users',{
+      email: email,
+      pass: pass
+    }).then(function(response){
+      alert('User created!');
+    }).catch(function(err){
+      alert(err);
+      console.log(err);
+    });
+    return false;
+  }
+  
+  getUser(e){
+    e.preventDefault();
+    let email = $("#email").val();
+    let pass = $("#pass").val();
+    axios.get(SERVER+'/users/'+email)
+    .then(function(response){
+      if(email == response.data[0].email && pass == response.data[0].pass){
+        //this.setState({user: response.data[0]});
+        $("#loginBtn").text('Welcome '+email);
+        alert('Connected!');
+      }
+      else alert('Email or password incorrect!');
+    }).catch(function(err){
+      alert(err);
+      console.log(err);
+    });
+    return false;
+  }
+  
+  getBooks(){
+    let type = $('#type').text().trim().toLowerCase();
+    let search = $('#searchBar').val().trim().toLowerCase();
+    if(type == 'title'){
+      axios.get(SERVER+'/googlebooks/'+search)
+      .then(function(response){
+        console.log(response.data);
+      }).catch(function(err){
+        alert(err);
+      });
+    }
+    else if(type == 'author'){
+      axios.get(SERVER+'/googleauthors/'+search)
+      .then(function(response){
+        console.log(response.data);
+      }).catch(function(err){
+        alert(err);
+      });
+    }
+  }
+  
+  componentDidMount(){
+    $(".dropdown-menu li a").click(function(){
+      var selText = $(this).text();
+      $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+    });
+  }
+  
   render() {
     return (
       <div>
@@ -29,7 +103,7 @@ class App extends Component {
             <div className="collapse navbar-collapse" id="navigation-example-2">
               <ul className="nav navbar-nav navbar-right">
                 <li>
-                  <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#loginmodal" style={{backgroundColor: '#D22335', border: 'none', color: 'white'}}>Login</button>
+                  <button id="loginBtn" type="button" className="btn btn-primary" data-toggle="modal" data-target="#loginmodal" style={{backgroundColor: '#D22335', border: 'none', color: 'white'}}>Login</button>
                 </li>
               </ul>
             </div>
@@ -45,20 +119,22 @@ class App extends Component {
                 <div className="row justify-content-center vcenter">
                   <div className="col-md-3">
                     <div className="btn-group" style={{float: 'right'}}>
-                      <a className="btn dropdown-toggle" data-toggle="dropdown" href="#" style={{color: 'white', backgroundColor: '#D22335', border: 'none'}}>
+                      <button id="type" className="btn dropdown-toggle" data-toggle="dropdown" style={{color: 'white', backgroundColor: '#D22335', border: 'none'}}>
                         Search book by <span className="caret"></span>
-                      </a>
+                      </button>
                       <ul className="dropdown-menu">
+                      {/*eslint-disable-next-line*/ }
                         <li><a href="#">Title</a></li>
+                        {/*eslint-disable-next-line*/}
                         <li><a href="#">Author</a></li>
                       </ul>
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <input type="text" placeholder="Type here" className="form-control" />
+                    <input id="searchBar" type="text" placeholder="Type here" className="form-control" />
                   </div>
                   <div className="col-md-3">
-                    <a href="https://www.google.com" className="btn btn-danger btn-fill" style={{backgroundColor: '#D22335', border: 'none'}}>Search</a>
+                    <button href="https://www.google.com" className="btn btn-danger btn-fill" style={{backgroundColor: '#D22335', border: 'none'}} onClick={this.getBooks}>Search</button>
                   </div>
                 </div>
               </div>
@@ -72,11 +148,11 @@ class App extends Component {
                       <div className="register-card">
                           <form className="register-form">
                               <label style={{color: 'white'}}>Email</label>
-                              <input type="text" className="form-control" placeholder="Email"/>
+                              <input type="text" className="form-control" placeholder="Email" id="email"/>
                               <label style={{color: 'white'}}>Password</label>
-                              <input type="password" className="form-control" placeholder="Password"/>
-                              <button className="btn btn-block" style={{marginTop: '1em', marginRight: '1em', float: 'left', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}}>Log in</button>
-                              <button className="btn btn-block" style={{marginTop: '1em', marginLeft: '1em', float: 'right', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}}>Register</button>
+                              <input type="password" className="form-control" placeholder="Password" id="pass"/>
+                              <button className="btn btn-block" style={{marginTop: '1em', marginRight: '1em', float: 'left', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.getUser}>Log in</button>
+                              <button className="btn btn-block" style={{marginTop: '1em', marginLeft: '1em', float: 'right', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.postUser}>Register</button>
                               <button style={{visibility: 'hidden'}}></button>
                               <button style={{visibility: 'hidden'}}></button>
                             </form>
@@ -87,13 +163,6 @@ class App extends Component {
         </div>
       </div>
     );
-  }
-  
-  componentDidMount(){
-    $(".dropdown-menu li a").click(function(){
-      var selText = $(this).text();
-      $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-    });
   }
 }
 
