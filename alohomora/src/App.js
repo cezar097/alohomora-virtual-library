@@ -3,6 +3,7 @@ import './App.css';
 import $ from 'jquery';
 import axios from 'axios';
 import BooksContainer from './BooksContainer';
+import ReactDOM from 'react-dom';
 
 const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io:8081";
 
@@ -11,8 +12,8 @@ class App extends Component {
     super(props);
     this.state = {
       user: null,
+      books: null,
     }
-    this.getUser = this.getUser.bind(this);
   }
   
   postUser(e){
@@ -31,14 +32,14 @@ class App extends Component {
     return false;
   }
   
-  getUser(e){
+  getUser=(e)=>{
     e.preventDefault();
     let email = $("#email").val();
     let pass = $("#pass").val();
     axios.get(SERVER+'/users/'+email)
-    .then(function(response){
-      if(email == response.data[0].email && pass == response.data[0].pass){
-        //this.setState({user: response.data[0]});
+    .then((response)=>{
+      if(email === response.data[0].email && pass === response.data[0].pass){
+        this.setState({user: response.data[0]});
         $("#loginBtn").text('Welcome '+email);
         alert('Connected!');
       }
@@ -50,21 +51,24 @@ class App extends Component {
     return false;
   }
   
-  getBooks(){
+  getBooks=()=>{
     let type = $('#type').text().trim().toLowerCase();
     let search = $('#searchBar').val().trim().toLowerCase();
-    if(type == 'title'){
+    this.setState({user: {email: "abs"}});
+    if(type === 'title'){
       axios.get(SERVER+'/googlebooks/'+search)
-      .then(function(response){
-        console.log(response.data);
+      .then((response)=>{
+        this.setState({books: response.data});
+        ReactDOM.render(<BooksContainer userId={this.state.user.email} books={response.data.items}/>, document.getElementById('bksContainer'));
       }).catch(function(err){
         alert(err);
       });
     }
-    else if(type == 'author'){
+    else if(type === 'author'){
       axios.get(SERVER+'/googleauthors/'+search)
-      .then(function(response){
-        console.log(response.data);
+      .then((response)=>{
+        this.setState({books: response.data});
+        ReactDOM.render(<BooksContainer userId={this.state.user.email} books={response.data.items}/>, document.getElementById('bksContainer'));
       }).catch(function(err){
         alert(err);
       });
@@ -140,8 +144,9 @@ class App extends Component {
               </div>
            </div>
          </div>
-         <BooksContainer/>
-         <div className="modal fade" id="loginmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+         <div id="bksContainer">
+        </div>
+         <div className="modal fade" id="loginmodal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div className="modal-dialog">
                 <div className="modal-content" style={{backgroundColor: '#D22335'}}>
                     <div className="modal-body">

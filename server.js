@@ -119,7 +119,7 @@ app.post('/favorites/:username/:bookid', (request,response)=>{
 })
 
 app.get('/googlebooks/:title',function(request, response) {
-    axios.get('https://www.googleapis.com/books/v1/volumes?q=intitle:'+request.params.title+'&key='+APIKey).then((books)=>{
+    axios.get('https://www.googleapis.com/books/v1/volumes?q=intitle:'+request.params.title+'&maxResults=40&key='+APIKey).then((books)=>{
         response.status(200).json(books.data)
     }).catch((ex)=>{
         console.log(ex)
@@ -127,7 +127,7 @@ app.get('/googlebooks/:title',function(request, response) {
 })
 
 app.get('/googleauthors/:author',function(request, response) {
-    axios.get('https://www.googleapis.com/books/v1/volumes?q=inauthor:'+request.params.author+'&key='+APIKey).then((books)=>{
+    axios.get('https://www.googleapis.com/books/v1/volumes?q=inauthor:'+request.params.author+'&maxResults=40&key='+APIKey).then((books)=>{
         response.status(200).json(books.data)
     }).catch((ex)=>{
         console.log(ex)
