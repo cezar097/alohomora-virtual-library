@@ -192,6 +192,8 @@
 
 .logo-container .logo{
     overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #333333;
     width: 50px;
     float: left;
 }
@@ -223,7 +225,7 @@
     min-height: 600px;
 }
 .demo-header-image{
-    background-image: url('../img/books.jpg');
+    background-image: url('../paper_img/city.jpg');
 }
 .demo-header .motto{
     color: #FFFFFF;
