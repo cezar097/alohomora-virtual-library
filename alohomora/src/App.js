@@ -16,15 +16,18 @@ class App extends Component {
     }
   }
   
-  postUser(e){
+  postUser=(e)=>{
     e.preventDefault();
     let email = $("#email").val();
     let pass = $("#pass").val();
     axios.post(SERVER+'/users',{
       email: email,
       pass: pass
-    }).then(function(response){
+    }).then((response)=>{
       alert('User created!');
+      this.setState({user: response.data[0]});
+      $("#loginBtn").text('Welcome '+email);
+      this.getFavs();
     }).catch(function(err){
       alert(err);
       console.log(err);
@@ -32,8 +35,7 @@ class App extends Component {
     return false;
   }
   
-  getUser=(e)=>{
-    e.preventDefault();
+  getUser=()=>{
     let email = $("#email").val();
     let pass = $("#pass").val();
     axios.get(SERVER+'/users/'+email)
@@ -41,7 +43,7 @@ class App extends Component {
       if(email === response.data[0].email && pass === response.data[0].pass){
         this.setState({user: response.data[0]});
         $("#loginBtn").text('Welcome '+email);
-        alert('Connected!');
+        this.getFavs();
       }
       else alert('Email or password incorrect!');
     }).catch(function(err){
@@ -54,7 +56,6 @@ class App extends Component {
   getBooks=()=>{
     let type = $('#type').text().trim().toLowerCase();
     let search = $('#searchBar').val().trim().toLowerCase();
-    this.setState({user: {email: "abs"}});
     if(type === 'title'){
       axios.get(SERVER+'/googlebooks/'+search)
       .then((response)=>{
@@ -73,6 +74,25 @@ class App extends Component {
         alert(err);
       });
     }
+  }
+  
+  modalType=()=>{
+    if(this.state.user===null) return "#loginmodal";
+    else return "#favsmodal";
+  }
+  
+  getFavs=()=>{
+    let body = $('#favsBody');
+    body.empty();
+    let i=1;
+    this.state.user.books.forEach(elem=>{
+        let row = $('<tr></tr>');
+        let id = $('<td></td>').text(i++);
+        let title = $('<td></td>').text(elem.title);
+        let author = $('<td></td>').text(elem.author);
+        row.append(id).append(title).append(author);
+        body.append(row);
+    });
   }
   
   componentDidMount(){
@@ -107,7 +127,7 @@ class App extends Component {
             <div className="collapse navbar-collapse" id="navigation-example-2">
               <ul className="nav navbar-nav navbar-right">
                 <li>
-                  <button id="loginBtn" type="button" className="btn btn-primary" data-toggle="modal" data-target="#loginmodal" style={{backgroundColor: '#D22335', border: 'none', color: 'white'}}>Login</button>
+                  <button id="loginBtn" type="button" className="btn btn-primary" data-toggle="modal" data-target={this.modalType()} style={{backgroundColor: '#D22335', border: 'none', color: 'white'}}>Login</button>
                 </li>
               </ul>
             </div>
@@ -156,13 +176,37 @@ class App extends Component {
                               <input type="text" className="form-control" placeholder="Email" id="email"/>
                               <label style={{color: 'white'}}>Password</label>
                               <input type="password" className="form-control" placeholder="Password" id="pass"/>
-                              <button className="btn btn-block" style={{marginTop: '1em', marginRight: '1em', float: 'left', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.getUser}>Log in</button>
-                              <button className="btn btn-block" style={{marginTop: '1em', marginLeft: '1em', float: 'right', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.postUser}>Register</button>
+                              <button className="btn btn-block" style={{marginTop: '1em', marginRight: '1em', float: 'left', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.getUser} data-dismiss="modal">Log in</button>
+                              <button className="btn btn-block" style={{marginTop: '1em', marginLeft: '1em', float: 'right', backgroundColor: 'white', border: 'none', width: '45%', display: 'inline-block'}} onClick={this.postUser} data-dismiss="modal">Register</button>
                               <button style={{visibility: 'hidden'}}></button>
                               <button style={{visibility: 'hidden'}}></button>
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div className="modal fade" id="favsmodal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                      <button type="button" className="close" aria-hidden="true" onClick={this.getUser}>refresh</button>
+                      <h4 className="modal-title" id="myModalLabel">Favorites</h4>
+                    </div>
+                    <div className="modal-body">
+                      <table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                            </tr>
+                        </thead>
+                        <tbody id="favsBody">
+                            
+                        </tbody>
+                    </table>
+                  </div>
                 </div>
             </div>
         </div>

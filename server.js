@@ -30,7 +30,6 @@ const Users = sequelize.define('users',{
 })
 
 const Books = sequelize.define('books',{
-    ISBN: Sequelize.STRING,
     title: Sequelize.STRING,
     author: Sequelize.STRING
 })
@@ -109,10 +108,18 @@ app.get('/authors/:author',(request,response)=>{
     })
 })
 
-app.post('/favorites/:username/:bookid', (request,response)=>{
-    Users.findOne({include: [{model: Books}], where: {username: request.params.username}}).then((user)=>{
+app.post('/favorites/:email/:bookid', (request,response)=>{
+    Users.findOne({include: [{model: Books}], where: {email: request.params.email}}).then((user)=>{
         user.addBooks(request.params.bookid)
         response.status(201).json({'message':'added'})
+    }).catch((ex)=>{
+        console.log(ex)
+    })
+})
+
+app.get('/favorites/:email', (request,response)=>{
+    Users.findOne({include: [{model: Books}], where: {email: request.params.email}}).then((books)=>{
+        response.status(201).json(books.books);
     }).catch((ex)=>{
         console.log(ex)
     })
