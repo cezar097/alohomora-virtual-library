@@ -5,7 +5,7 @@ import axios from 'axios';
 import BooksContainer from './BooksContainer';
 import ReactDOM from 'react-dom';
 
-const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io:8081";
+const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io";
 
 class App extends Component {
   constructor (props){
@@ -26,10 +26,10 @@ class App extends Component {
     }).then((response)=>{
       alert('User created!');
       this.setState({user: response.data[0]});
+      this.setState({user: {email: email}});
       $("#loginBtn").text('Welcome '+email);
       this.getFavs();
     }).catch(function(err){
-      alert(err);
       console.log(err);
     });
     return false;
@@ -47,7 +47,6 @@ class App extends Component {
       }
       else alert('Email or password incorrect!');
     }).catch(function(err){
-      alert(err);
       console.log(err);
     });
     return false;
@@ -62,7 +61,7 @@ class App extends Component {
         this.setState({books: response.data});
         ReactDOM.render(<BooksContainer userId={this.state.user.email} books={response.data.items}/>, document.getElementById('bksContainer'));
       }).catch(function(err){
-        alert(err);
+        console.log(err);
       });
     }
     else if(type === 'author'){
@@ -71,7 +70,7 @@ class App extends Component {
         this.setState({books: response.data});
         ReactDOM.render(<BooksContainer userId={this.state.user.email} books={response.data.items}/>, document.getElementById('bksContainer'));
       }).catch(function(err){
-        alert(err);
+        console.log(err);
       });
     }
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Book.css';
 import axios from 'axios';
 
-const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io:8081";
+const SERVER = "https://alohomora-virtual-library-cezar097.c9users.io";
 
 class Book extends Component {
     postBook=()=>{
@@ -19,10 +19,10 @@ class Book extends Component {
             .then((response)=>{
                 alert('Book added!');
             }).catch((err)=>{
-                alert(err);
+                console.log(err);
             });
         }).catch((err)=>{
-            alert(err);
+            console.log(err);
         });
     }
     

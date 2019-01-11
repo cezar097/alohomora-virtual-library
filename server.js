@@ -10,10 +10,10 @@ app.use('/nodeadmin',nodeadmin(app))
 var cors = require('cors');
 app.use(cors());
 
-app.use('/',express.static('public'))
+app.use('/',express.static('alohomora/build'))
 app.use(express.json())
 app.use(express.urlencoded())
-app.listen(8081)
+app.listen(8080)
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('alohomora', 'root','',{
